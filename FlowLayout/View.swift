@@ -102,11 +102,13 @@ class View: UIView {
 			if let view = view as? View {
 				var frame = view.frame
 				
+				// Try to set frame
 				frame.left = innerFrame.left + view.margin.left + accumulation.left
 				
+				//Check for overflow
 				if  frame.right + view.margin.right > innerFrame.right { // Go to new row
 					frame.left = innerFrame.left + view.margin.left
-					accumulation.top += accumulation.bottom
+					accumulation.top = accumulation.bottom
 					accumulation.bottom = 0 // Reset tallest item in row
 					
 					rows.addObject(currentRow)
@@ -157,51 +159,11 @@ class View: UIView {
 		}
 	}
 	
-	func manuallyFlowLayout() {
-		var innerFrame = self.bounds
-		innerFrame -= self.padding
-		
-		var accumulation = UIEdgeInsetsZero
-		
-		for view: AnyObject in self.subviews {
-			if let view = view as? View {
-				var frame = view.frame
-				
-				frame.left = innerFrame.left + view.margin.left + accumulation.left
-				
-				if  frame.right + view.margin.right > innerFrame.right { // Go to new row
-					frame.left = innerFrame.left + view.margin.left
-					accumulation.top += accumulation.bottom
-					accumulation.bottom = 0 // Reset tallest item in row
-				}
-				
-				// Set the top of the rect
-				frame.top = accumulation.top
-				
-				// Stack from left to right
-				accumulation.left = frame.right + view.margin.right
-				
-				// Find the tallest box in row
-				accumulation.bottom = max(frame.bottom + view.margin.bottom, accumulation.bottom)
-				accumulation.right = max(view.margin.left + frame.right + view.margin.right, accumulation.right)
-				
-				// Set frame
-				view.frame = frame
-			}
-		}
-	}
-	
 	override func addSubview(view: UIView!) {
 		if let view = view as? View {
 			view.maxSize = self.maxSize
 		}
 		super.addSubview(view)
 	}
-	
-	func clamp<T: Comparable>(input: T, wall: T) -> T {
-		if input > wall { return wall }
-		return input
-	}
-	
 }
 
