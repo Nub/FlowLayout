@@ -25,17 +25,12 @@ class ViewController: UIViewController {
 	func style() {
 		layoutView.backgroundColor = UIColor.blackColor()
 		layoutView.frame = self.view.bounds
+		layoutView.padding.left = 5
 //		layoutView.centerContents = true
 	}
 	
 	func build() {
-		
-		let a = View(frame: CGRect(x: 0, y: 0, width: 170, height: 20))
-		a.backgroundColor = UIColor.yellowColor()
-		
-		self.layoutView.addSubview(a)
-		
-		for i in 0..<50 {
+		for i in 0..<200 {
 			let a = View(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
 			a.backgroundColor = UIColor.blueColor()
 			a.margin.bottom = 1
@@ -43,10 +38,12 @@ class ViewController: UIViewController {
 			self.layoutView.addSubview(a)
 		}
 		
-		dispatch_async(dispatch_get_main_queue()){
-			UIView.animateWithDuration(5.0, delay: 1.0, options: UIViewAnimationOptions.LayoutSubviews, animations: {
+		let delay = 4.5 * Double(NSEC_PER_SEC)
+		let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+		dispatch_after(time, dispatch_get_main_queue()){
+			UIView.animateWithDuration(1.0){
 				self.layoutView.frame = CGRect(x: 0, y: 0, width: 200, height: self.view.bounds.size.height)
-				}, completion: nil)
+			}
 		}
 	}
 }

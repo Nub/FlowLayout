@@ -94,16 +94,18 @@ class View: UIView {
 		innerFrame -= self.padding
 		
 		var accumulation = UIEdgeInsetsZero
+		accumulation.left = innerFrame.left
 		
 		var rows = NSMutableArray()
 		var currentRow = NSMutableArray()
+		var i = 0
 		
 		for view: AnyObject in self.subviews {
 			if let view = view as? View {
 				var frame = view.frame
 				
 				// Try to set frame
-				frame.left = innerFrame.left + view.margin.left + accumulation.left
+				frame.left = view.margin.left + accumulation.left
 				
 				//Check for overflow
 				if  frame.right + view.margin.right > innerFrame.right { // Go to new row
@@ -126,10 +128,13 @@ class View: UIView {
 				accumulation.right = max(view.margin.left + frame.right + view.margin.right, accumulation.right)
 				
 				// Set frame
-				view.frame = frame
+				UIView.animateWithDuration(0.25, delay: NSTimeInterval(i) * 0.01, options: UIViewAnimationOptions.LayoutSubviews, animations: {
+					view.frame = frame
+					}, completion: nil)
 				
 				// Collect view
 				currentRow.addObject(view)
+				i += 1
 			}
 		}
 
